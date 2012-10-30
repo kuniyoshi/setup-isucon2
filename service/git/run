@@ -1,0 +1,11 @@
+#!/bin/sh
+GIT_USER=daemon
+BASE_PATH=/home/isucon/src
+REPO_DIR=/home/isucon/src
+GIT=/usr/local/bin/git
+exec $GIT\
+ $GIT_USER\
+ --export-all\
+ --enable=receive-pack\
+ --base-path=$BASE_PATH\
+ $REPO_DIR

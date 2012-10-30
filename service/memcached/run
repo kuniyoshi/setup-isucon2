@@ -1,0 +1,4 @@
+#!/bin/sh
+PATH=/usr/local/bin:/usr/bin:/bin
+export PATH
+exec env - PATH=$PATH memcached -u isucon -m 64 -l 192.168.1.121 -p 11211 -I 4m 2>/dev/stdout

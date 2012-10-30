@@ -1,0 +1,101 @@
+#!/usr/bin/perl
+use 5.10.0;
+use utf8;
+use strict;
+use warnings;
+use open qw( :utf8 :std );
+use Data::Dumper;
+use autodie qw( open close );
+
+my $filename = shift
+    or die "usage $0 <filename>";
+
+my @logs;
+
+open my $FH, "<", $filename;
+
+while ( <$FH> ) {
+    chomp( my $line = $_ );
+    my %log = parse_line( $line );
+    push @logs, \%log;
+}
+
+close $FH;
+
+my %count;
+my %spend;
+my %max;
+my %min;
+my %sum;
+my %avg;
+
+foreach my $log_ref ( @logs ) {
+    my( $spend ) = @{ $log_ref }{ qw( spend ) };
+#warn $spend;
+
+    if ( 0 == index $log_ref->{request}, q{"GET /js/} ) {
+        $count{js}++;
+        $spend{js} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"GET /css/} ) {
+        $count{css}++;
+        $spend{css} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"GET /images/} ) {
+        $count{images}++;
+        $spend{images} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"GET /article/} ) {
+        $count{article}++;
+        $spend{article} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"GET /comment/} ) {
+        $count{comment}++;
+        $spend{comment} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"GET / } ) {
+        $count{index}++;
+        $spend{index} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"POST /comment/} ) {
+        $count{post}++;
+        $spend{post} += $spend;
+    }
+    elsif ( 0 == index $log_ref->{request}, q{"POST /post } ) {
+        $count{post_post}++;
+        $spend{post_post} += $spend;
+    }
+    else {
+        die "Could not parse: ", Dumper $log_ref;
+    }
+}
+
+say "#" x 80;
+say Dumper \%count;
+say "#" x 80;
+say Dumper \%spend;
+#say "#" x 80;
+#say "#" x 80;
+
+
+exit;
+
+sub parse_line {
+    my $line = shift;
+    my( $ip, $id, $auth, $date1, $date2, $method, $path, $version, $status, $size, $referer, $ua1, $ua2, $forwarded_for, $spend1, $spend2 ) = split m{ }, $line;
+    my %log = (
+        date => join( q{ }, $date1, $date2 ),
+        request => join( q{ }, $method, $path, $version ),
+        status => $status,
+        size => $size,
+        spend => $spend1 ne q{"-"} ? $spend1 : $spend2,
+    );
+    $log{spend} //= 0;
+    $log{spend} =~ s{\A ["] }{}msx;
+    $log{spend} =~ s{ ["] \z}{}msx;
+#warn $log{spend};
+    return %log;
+}
+
+__END__
+192.168.1.101 - - [28/Oct/2012:23:51:01 +0900] "GET /js/jquery-ui-1.8.14.custom.min.js HTTP/1.1" 200 57344 "-" "http_load 12mar2006" "-" "0.002"
