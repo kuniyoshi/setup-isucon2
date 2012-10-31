@@ -1,5 +1,5 @@
 #!/bin/sh
-TIME=$(DATE %H:%M:%S)
+TIME=$(date +%H:%M:%S)
 sudo mv /usr/local/nginx/logs/access.log{,.$TIME}
 sudo mv /usr/local/nginx/logs/error.log{,.$TIME}
 sudo /etc/init.d/nginx restart
