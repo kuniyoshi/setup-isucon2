@@ -1,4 +1,5 @@
 #!/bin/sh
-sudo mv /usr/local/nginx/logs/access.log{,$(date +%Y-%m-%dT%H:%M:%S)}
-sudo mv /usr/local/nginx/logs/error.log{,$(date +%Y-%m-%dT%H:%M:%S)}
+TIME=$(DATE %H:%M:%S)
+sudo mv /usr/local/nginx/logs/access.log{,.$TIME}
+sudo mv /usr/local/nginx/logs/error.log{,.$TIME}
 sudo /etc/init.d/nginx restart
