@@ -5,22 +5,18 @@ use strict;
 use warnings;
 use open qw( :utf8 :std );
 use Data::Dumper;
-use autodie qw( open close );
 
-my $filename = shift
-    or die "usage $0 <filename>";
+$Data::Dumper::Terse    = 1;
+$Data::Dumper::Sortkeys = 1;
+$Data::Dumper::Indent   = 1;
 
 my @logs;
 
-open my $FH, "<", $filename;
-
-while ( <$FH> ) {
+while ( <> ) {
     chomp( my $line = $_ );
     my %log = parse_line( $line );
     push @logs, \%log;
 }
-
-close $FH;
 
 my %count;
 my %spend;
