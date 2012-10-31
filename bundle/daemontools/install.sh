@@ -1,19 +1,18 @@
 #!/bin/sh
-
 if [ `whoami` != 'root' ]
 then
     echo 'need root privilege.'
     exit 1
 fi
 
+DAEMONTOOL=daemontools-0.76
+
 mkdir -p   /package
 chmod 1755 /package
-
-DAEMONTOOL=daemontools-0.76
 tar zxf $DAEMONTOOL.tar.gz
 (cd admin/$DAEMONTOOL && patch -p2 < ../../daemontools-for-redhat9.patch)
 (cd admin && patch -p0 <../daemontools-0.76.sigq12.patch)
-mv admin /package/admin && cd /package/admin/$DAEMONTOOL && package/install
+(mv admin /package/admin && cd /package/admin/$DAEMONTOOL && package/install)
 
 if [ -n "`grep release\ 6 /etc/redhat-release`" ]
 then
