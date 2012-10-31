@@ -1,0 +1,8 @@
+#!/bin/sh
+memcached\
+ -u www\
+ -m 64\
+ -l 192.168.1.121\
+ -p 11211\
+ -I 4m\
+ 2>/dev/stdout
