@@ -1,5 +1,3 @@
-ISUCON#2 のセットアップ
-
 OS
 ==
 
@@ -7,6 +5,8 @@ yum
 ---
 
     yum/install
+
+各 OS で実行します。
 
 user
 ----
@@ -25,9 +25,11 @@ other
 * root のパスワードを簡単なものにしておく
 * newgrp で isucon にしてから作業する
 * ulimit 系なら /etc/security/limits.conf で増やす
+* selinux は disabled がいいかも
+* iptables を確認する
 
-Middle Ware
-===========
+Middleware
+==========
 
 nginx
 -----
@@ -103,4 +105,28 @@ bin/clear_starman_log
 
 解析しやすいように starman の log/main を世代交代します。
 
+戦略
+====
+
+初期環境設定
+------------
+
+まずは ssh 環境を整えます。
+
+バックアップ
+------------
+
+大事です。コードと静的ファイル、データベースなどを保存します。
+
+最初の測定
+----------
+
+もらった環境で、いちど測定しておきます。
+
+ミドルウェア周りの設定
+----------------------
+
+daemontools に慣れているので、daemontools をインストールします。
+nginx じゃなかったら、nginx に変えます。
+memcached がなかったり、他の KVS だったりした場合は memcached に切り替えます。
 
