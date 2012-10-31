@@ -2,16 +2,15 @@ usage:
 	@echo make "<memcached|starman|git>"
 
 memcached:
-	sudo rsync -av memcached.d/ /service/.memcached
+	sudo rsync -a memcached.d/ /service/.memcached
 	sudo chown -R root:root /service/.memcached
 	sudo mv /service/{.,}memcached
 
 starman:
-	@echo starman
-	rsync -av starman/ /service/.starman
+	sudo rsync -a starman.d/ /service/.starman
 	sudo chown -R root:root /service/.starman
 	sudo chown -R logadmin:logadmin /service/.starman/log
-	mv /service/{.,}starman
+	sudo mv /service/{.,}starman
 
 git:
 	@echo git
