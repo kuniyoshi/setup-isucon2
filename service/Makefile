@@ -13,8 +13,7 @@ starman:
 	sudo mv /service/{.,}starman
 
 git:
-	@echo git
-	rsync -av git/ /service/.git
+	sudo rsync -a git.d/ /service/.git
 	sudo chown -R root:root /service/.git
-	mv /service/{.,}git
+	sudo mv /service/{.,}git
 
