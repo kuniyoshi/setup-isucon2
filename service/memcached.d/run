@@ -1,5 +1,6 @@
 #!/bin/sh
-memcached\
+MEMCACHED=/usr/local/memcached/bin/memcached
+$MEMCACHED\
  -u www\
  -m 64\
  -l 192.168.1.121\
