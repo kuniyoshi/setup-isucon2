@@ -1,4 +1,5 @@
 USERADD=/usr/sbin/useradd
+GROUPADD=/usr/sbin/groupadd
 ISUCON_GROUP=isucon
 HOSTS=192.168.1.122 192.168.1.123 192.168.1.124
 
@@ -30,8 +31,26 @@ purasi-bo:
 	(umask 077 && cat /tmp/id_rsa.pub >~purasi-bo/.ssh/authorized_keys)
 	chown purasi-bo:purasi-bo -R ~purasi-bo
 
+www:
+	$(GROUPADD) -g 80 www
+	$(USERADD) -u 80 -g 80 -M -r -s /sbin/nologin www
+
+tominaga:
+	$(USERADD) -G wheel,$(ISUCON_GROUP) tominaga
+
+ikegami:
+	$(USERADD) -G wheel,$(ISUCON_GROUP) -s /bin/zsh ikegami
+
+logadmin:
+	$(USERADD) -M -r -s /sbin/nologn logadmin
+
 create_users:
 	for x in $(HOSTS); do ssh $$x $(USERADD) -G wheel,$(ISUCON_GROUP) -s /bin/zsh purasi-bo; done
+	for x in $(HOSTS); do ssh $$x $(USERADD) -G wheel,$(ISUCON_GROUP) tominaga; done
+	for x in $(HOSTS); do ssh $$x $(USERADD) -G wheel,$(ISUCON_GROUP) -s /bin/zsh ikegami; done
+	for x in $(HOSTS); do ssh $$x $(GROUPADD) -g 80 www; done
+	for x in $(HOSTS); do ssh $$x $(USERADD) -u 80 -g 80 -M -r -s /sbin/nologn www; done
+	for x in $(HOSTS); do ssh $$x $(USERADD) -M -r -s /sbin/nologin logadmin; done
 
 rsync_users:
 	for x in $(HOSTS); do rsync -a ~purasi-bo $$x:/home; done
